@@ -1,0 +1,2 @@
+# Run a daily incremental backup at 02:15. Perform an initial full backup manually.
+15 2 * * * root LINUXOPSKIT_CONFIG=/etc/linuxopskit/linuxopskit.conf /opt/linuxopskit/bin/linuxopskit backup incremental

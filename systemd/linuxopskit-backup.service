@@ -1,0 +1,25 @@
+[Unit]
+Description=LinuxOpsKit incremental backup
+After=local-fs.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=linuxopskit
+Group=linuxopskit
+Environment=LINUXOPSKIT_CONFIG=/etc/linuxopskit/linuxopskit.conf
+ExecStart=/opt/linuxopskit/bin/linuxopskit backup incremental
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/backups/linuxopskit /var/lib/linuxopskit /var/log/linuxopskit
+# Permit read/search through source files with restrictive DAC modes without granting write bypass.
+CapabilityBoundingSet=CAP_DAC_READ_SEARCH
+AmbientCapabilities=CAP_DAC_READ_SEARCH
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+LockPersonality=true
+RestrictSUIDSGID=true

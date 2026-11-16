@@ -1,0 +1,25 @@
+name: LinuxOpsKit CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Bash syntax and integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Install test dependencies
+        run: sudo apt-get update && sudo apt-get install -y bash coreutils findutils tar gzip jq
+      - name: Bash syntax
+        run: make syntax
+      - name: Integration tests
+        run: make test

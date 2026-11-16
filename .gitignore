@@ -1,0 +1,14 @@
+# Local configuration and operational data
+config/linuxopskit.conf
+*.snar
+*.tar
+*.tar.gz
+*.sha256
+*.meta
+*.sql
+*.jsonl
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store

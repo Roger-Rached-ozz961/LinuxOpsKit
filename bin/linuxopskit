@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# LinuxOpsKit command-line entry point.
+set -Eeuo pipefail
+umask 077
+
+LINUXOPSKIT_ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)
+export LINUXOPSKIT_ROOT
+# shellcheck source=../lib/core.sh
+source "$LINUXOPSKIT_ROOT/lib/core.sh"
+# shellcheck source=../lib/backup.sh
+source "$LINUXOPSKIT_ROOT/lib/backup.sh"
+# shellcheck source=../lib/restore.sh
+source "$LINUXOPSKIT_ROOT/lib/restore.sh"
+# shellcheck source=../lib/retention.sh
+source "$LINUXOPSKIT_ROOT/lib/retention.sh"
+# shellcheck source=../lib/maintenance.sh
+source "$LINUXOPSKIT_ROOT/lib/maintenance.sh"
+
+usage() {
+  cat <<'USAGE'
+LinuxOpsKit - modular Linux backup and maintenance toolkit
+
+Usage:
+  linuxopskit backup [full|incremental]
+  linuxopskit list
+  linuxopskit verify
+  linuxopskit restore CHAIN_ID ABSOLUTE_EMPTY_TARGET
+  linuxopskit cleanup [--apply]
+  linuxopskit retention
+  linuxopskit help
+
+Set LINUXOPSKIT_CONFIG to the path of a trusted configuration file.
+USAGE
+}
+
+main() {
+  loks_load_config
+  case ${1:-help} in
+    backup) shift; loks_backup "${1:-incremental}" ;;
+    list) loks_list ;;
+    verify) loks_verify ;;
+    restore) shift; loks_restore "${1:-}" "${2:-}" ;;
+    cleanup) shift; loks_cleanup "${1:-}" ;;
+    retention) loks_apply_retention ;;
+    help|-h|--help) usage ;;
+    *) usage >&2; loks_die "Unknown command: $1" ;;
+  esac
+}
+main "$@"

@@ -1,0 +1,43 @@
+# Copy to /etc/linuxopskit/linuxopskit.conf and protect with chmod 0600.
+# This is a Bash configuration file and is sourced by the program. Only load
+# a file owned by a trusted administrator; it can execute shell code.
+
+DESTINATION="/var/backups/linuxopskit"
+BACKUP_SET="default"
+HOST_ID="$(hostname -s)"
+STATE_DIR="/var/lib/linuxopskit/state"
+LOG_DIR="/var/log/linuxopskit"
+
+# Explicit source directories. Do not include the backup destination.
+BACKUP_PATHS=(
+  "/etc"
+  "/home"
+  "/srv"
+)
+
+# Retain this many complete full-backup chains (each full + its incrementals).
+RETENTION_FULL_CHAINS=4
+MIN_FREE_SPACE_PERCENT=5
+
+# Optional mounted destination guard. DESTINATION must be inside this mount.
+REQUIRE_MOUNTPOINT=""
+
+# Optional PostgreSQL logical dump. pg_dumpall must be installed and configured
+# with standard libpq environment/service-file authentication.
+POSTGRES_ENABLED=false
+POSTGRES_DUMP_FILE="/var/lib/linuxopskit/postgres.sql"
+
+# Optional rclone remote, e.g. "s3:my-bucket/linuxopskit". Configure rclone
+# credentials outside this repository with restrictive permissions.
+RCLONE_REMOTE=""
+
+# Optional mail and webhook notifications. Keep webhook URLs private.
+NOTIFY_EMAIL=""
+WEBHOOK_URL=""
+
+# Cleanup is dry-run by default; `cleanup --apply` performs deletion.
+CLEANUP_PATHS=(
+  "/var/tmp/linuxopskit-cleanup"
+)
+CLEANUP_GLOB="*.tmp"
+CLEANUP_MIN_AGE_DAYS=30

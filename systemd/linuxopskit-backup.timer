@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily LinuxOpsKit backup timer
+
+[Timer]
+OnCalendar=daily
+RandomizedDelaySec=30m
+Persistent=true
+Unit=linuxopskit-backup.service
+
+[Install]
+WantedBy=timers.target
